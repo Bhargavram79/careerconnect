@@ -1,0 +1,16 @@
+:root {
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+* { box-sizing: inherit; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #fafdff;
+  color: #183a5c;
+}
+a { color: #1e88e5; text-decoration: none; }
+.page-wrap { padding: 24px; }

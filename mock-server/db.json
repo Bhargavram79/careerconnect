@@ -1,0 +1,15 @@
+{
+  "users": [
+    { "id": 1, "email": "student@school.com", "password": "student123", "role": "user", "name": "Student User" },
+    { "id": 2, "email": "admin@careerconnect.com", "password": "admin123", "role": "admin", "name": "Admin User" }
+  ],
+  "resources": [
+    { "id": 1, "title": "Frontend Developer", "category": "Technology", "content": "Frontend development guide." }
+  ],
+  "counselors": [
+    { "id": 1, "name": "Dr. Rao", "expertise": "Engineering", "availability": ["2025-12-01T10:00"] }
+  ],
+  "sessions": [
+    { "id": 1, "userId": 1, "counselorId": 1, "datetime": "2025-12-05T14:00", "status": "booked" }
+  ]
+}
