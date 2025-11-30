@@ -1,15 +1,14 @@
 {
   "users": [
-    { "id": 1, "email": "student@school.com", "password": "student123", "role": "user", "name": "Student User" },
-    { "id": 2, "email": "admin@careerconnect.com", "password": "admin123", "role": "admin", "name": "Admin User" }
+    { "id": 1, "email": "student@school.com", "password": "student123", "role": "user", "name": "Student User", "phone": "" },
+    { "id": 2, "email": "admin@careerconnect.com", "password": "admin123", "role": "admin", "name": "Admin User", "phone": "" }
   ],
   "resources": [
-    { "id": 1, "title": "Frontend Developer", "category": "Technology", "content": "Frontend development guide." }
+    { "id": "frontend", "title": "Frontend Developer", "domain": "Technology", "summary": "Build beautiful user interfaces using HTML, CSS, and JS. Learn React, accessibility and responsive design.", "topics": ["HTML","CSS","JavaScript","React"] },
+    { "id": "datascience", "title": "Data Scientist", "domain": "Data", "summary": "Work with data, build models and visualizations to derive insights.", "topics": ["Python","Pandas","ML"] },
+    { "id": "product", "title": "Product Manager", "domain": "Product", "summary": "Own product strategy and roadmap; coordinate across engineering and design.", "topics": ["Roadmaps","UX","Stakeholders"] },
+    { "id": "cloud", "title": "Cloud Engineer", "domain": "Cloud", "summary": "Design and operate cloud infrastructure and pipelines using modern cloud providers.", "topics": ["AWS","Kubernetes","DevOps"] }
   ],
-  "counselors": [
-    { "id": 1, "name": "Dr. Rao", "expertise": "Engineering", "availability": ["2025-12-01T10:00"] }
-  ],
-  "sessions": [
-    { "id": 1, "userId": 1, "counselorId": 1, "datetime": "2025-12-05T14:00", "status": "booked" }
-  ]
+  "bookings": [],
+  "contacts": []
 }

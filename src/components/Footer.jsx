@@ -1,18 +1,18 @@
+// src/components/Footer.jsx
 import React from "react";
 
-export default function Footer() {
-  // keep markup simple and safe to avoid render errors
+export default function Footer(){
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <h3>CareerConnect</h3>
-          <p>Connecting students with career mentors and practical resources.</p>
+          <h3 style={{margin:'0 0 6px 0'}}>CareerConnect</h3>
+          <p style={{margin:0,color:'#cfe6dd'}}>Connecting students with mentors and practical resources.</p>
         </div>
 
         <div>
           <h4>Product</h4>
-          <ul>
+          <ul style={{listStyle:'none',padding:0,margin:0}}>
             <li>Explore Careers</li>
             <li>Book Sessions</li>
             <li>Resource Library</li>
@@ -21,7 +21,7 @@ export default function Footer() {
 
         <div>
           <h4>Company</h4>
-          <ul>
+          <ul style={{listStyle:'none',padding:0,margin:0}}>
             <li>About</li>
             <li>Contact</li>
             <li>Privacy</li>
@@ -30,17 +30,8 @@ export default function Footer() {
 
         <div>
           <h4>Contact</h4>
-          <p>
-            <a
-              href="mailto:2400031554@kluniversity.in?subject=CareerConnect%20Support%20Request"
-              className="footer-link"
-            >
-              2400031554@kluniversity.in
-            </a>
-          </p>
-          <p>
-            <a href="tel:+917382570450" className="footer-link">+91 73825 70450</a>
-          </p>
+          <p style={{margin:0}}>2400031554@kluniversity.in</p>
+          <p style={{margin:0}}>+91 73825 70450</p>
         </div>
       </div>
 

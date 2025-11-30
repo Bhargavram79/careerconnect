@@ -1,107 +1,71 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
+import { API } from "../config";
 import { useNavigate } from "react-router-dom";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [sending, setSending] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  function validate() {
+    const e = {};
+    if (!email.trim()) e.email = "Email is required.";
+    else if (!emailRegex.test(email.trim())) e.email = "Enter a valid email (example@domain.com).";
+    if (!password.trim()) e.password = "Password cannot be empty.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
-    setError("");
-
+    setMsg(null);
+    if (!validate()) return;
+    setSending(true);
     try {
-      const res = await fetch(`http://localhost:4000/users?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${API}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
       const data = await res.json();
-
-      if (!Array.isArray(data) || data.length === 0) {
-        setError("User not found.");
+      if (!data || data.length === 0) {
+        setMsg({ type: "error", text: "Invalid email or password." });
+        setSending(false);
         return;
       }
-
       const user = data[0];
-
-      if (user.password !== password) {
-        setError("Incorrect password.");
-        return;
-      }
-
-      // Save session to localStorage
       localStorage.setItem("career_user", JSON.stringify(user));
-
-      // redirect based on role
-      if (user.role === "admin") navigate("/admin");
-      else navigate("/student");
-    } catch (err) {
-      console.error(err);
-      setError("Login failed. Ensure mock server is running.");
+      setMsg({ type: "success", text: "Login successful! Redirecting..." });
+      setTimeout(()=> {
+        if (user.role === "admin") navigate("/admin");
+        else navigate("/");
+      }, 900);
+    } catch {
+      setMsg({ type: "error", text: "Login failed. Try again later." });
+    } finally {
+      setSending(false);
     }
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Sign In</h2>
-        <p style={styles.subtitle}>Access your CareerConnect dashboard</p>
-
-        {error && <div style={styles.errorBox}>{error}</div>}
-
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Sign In</h2>
         <form onSubmit={handleLogin}>
-          <label style={styles.label}>Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={styles.input}
-            placeholder="you@kluniversity.in"
-          />
+          <label>Email</label>
+          <input className="input" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="example@domain.com" />
+          {errors.email && <div style={{color:"#b02a2a", marginTop:6}}>{errors.email}</div>}
 
-          <label style={styles.label}>Password</label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={styles.input}
-            placeholder="password"
-          />
+          <label style={{marginTop:12}}>Password</label>
+          <input className="input" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter your password" />
+          {errors.password && <div style={{color:"#b02a2a", marginTop:6}}>{errors.password}</div>}
 
-          <button type="submit" style={styles.button}>Sign In</button>
+          <button className="btn primary" type="submit" disabled={sending} style={{width:"100%", marginTop:18}}>{sending ? "Signing in..." : "Sign In"}</button>
+
+          {msg && <div style={{marginTop:12, color: msg.type === "success" ? "green" : "#b02a2a"}}>{msg.text}</div>}
         </form>
-
-        <p style={styles.footerText}>
-          Don’t have an account? <a style={styles.link} onClick={() => navigate("/register")}>Register</a>
-        </p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#F6F5F2",
-  },
-  card: {
-    width: "380px",
-    padding: "30px",
-    background: "#ffffff",
-    borderRadius: "14px",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-  },
-  title: { margin: 0, marginBottom: 6 },
-  subtitle: { margin: 0, marginBottom: 20, color: "#6d6d6d" },
-  label: { display: "block", marginBottom: 4, fontWeight: 600 },
-  input: { width: "100%", padding: "12px", marginBottom: "14px", borderRadius: "10px", border: "1px solid #ddd", fontSize: "1rem" },
-  button: { width: "100%", padding: "12px", background: "linear-gradient(135deg,#0DB3A6,#089f94)", border: "none", color: "#fff", borderRadius: "10px", cursor: "pointer", fontSize: "1rem", fontWeight: 700 },
-  footerText: { textAlign: "center", marginTop: 12 },
-  link: { color: "#0DB3A6", cursor: "pointer", fontWeight: 600 },
-  errorBox: { background: "#ffdddd", padding: 10, borderRadius: 8, color: "#b30000", marginBottom: 12 },
-};

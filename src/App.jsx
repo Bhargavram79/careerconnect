@@ -1,21 +1,22 @@
 // src/App.jsx
-import React, { useState, useEffect } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
-
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
-
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import Bookings from "./pages/Bookings";
 
-/* Simple fallback student dashboard if you don't yet have a separate file */
+
+// Lazy load heavy pages for perceived performance
+const Careers = lazy(() => import("./pages/Careers"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+
 function StudentDashboard() {
   const user = JSON.parse(localStorage.getItem("career_user") || "null");
   return (
@@ -42,38 +43,44 @@ export default function App() {
       <Nav role={role} setRole={setRole} />
 
       <main className="main-content">
-        <Routes>
-          {/* Home / public */}
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+        <Suspense fallback={<div style={{padding:40}}>Loading...</div>}>
+          <Routes>
+            {/* Public */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
 
-          {/* Auth */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Explore Careers (lazy loaded) */}
+            <Route path="/careers" element={<Careers />} />
 
-          {/* Protected */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowed={["admin"]}>
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
+            {/* Auth */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/bookings" element={<Bookings />} />
 
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute allowed={["user"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
 
-          {/* fallback */}
-          <Route path="*" element={<Home />} />
-        </Routes>
+            {/* Protected */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowed={["admin"]}>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student"
+              element={
+                <ProtectedRoute allowed={["user"]}>
+                  <StudentDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* 404 fallback */}
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <Footer />
